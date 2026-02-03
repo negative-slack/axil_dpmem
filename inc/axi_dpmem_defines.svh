@@ -13,6 +13,10 @@
 `define AXI_BURST_WIDTH 2
 `endif
 
+`ifndef AXI_LEN_WIDTH 
+`define AXI_LEN_WIDTH 8
+`endif
+
 `ifndef AXI_DATA_WIDTH 
 `define AXI_DATA_WIDTH 32
 `endif

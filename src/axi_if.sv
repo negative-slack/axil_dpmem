@@ -70,6 +70,66 @@ interface axi_if
   // logic [$:0] RID;
   // logic [$:0] RUSER;
 
+  modport slv_mp(
+      input  // each channel will be in a sepearte line for better visualization
+
+      ACLK, ARESETn,  // system
+
+      AWVALID, AWADDR, AWSIZE, AWBURST, AWLEN,  // WRITE ADDRESS CHANNEL SIGNALS
+
+      WVALID, WLAST, WDATA, WSTRB,  // WRITE DATA CHANNEL SIGNALS
+
+      BVALID,  // WRITE RESPONSE CHANNEL SIGNALS
+
+      ARVALID, ARADDR, ARSIZE, ARBURST, ARLEN,  // READ ADDRESS CHANNEL SIGNALS
+
+      READY,  // READ DATA CHANNEL SIGNALS
+
+
+      output  // each channel will be in a sepearte line for better visualization
+
+      AWREADY,  // WRITE ADDRESS CHANNEL SIGNALS
+
+      WREADY,  // WRITE DATA CHANNEL SIGNALS
+
+      BREADY, BRESP,  // WRITE RESPONSE CHANNEL SIGNALS
+
+      AREADY,  // READ ADDRESS CHANNEL SIGNALS
+
+      RVALID, RLAST, RDATA, RESP  // READ DATA CHANNEL SIGNALS
+
+  );
+
+  modport mst_mp(
+      output  // each channel will be in a sepearte line for better visualization
+
+      AWVALID, AWADDR, AWSIZE, AWBURST, AWLEN,  // WRITE ADDRESS CHANNEL SIGNALS
+
+      WVALID, WLAST, WDATA, WSTRB,  // WRITE DATA CHANNEL SIGNALS
+
+      BVALID,  // WRITE RESPONSE CHANNEL SIGNALS
+
+      ARVALID, ARADDR, ARSIZE, ARBURST, ARLEN,  // READ ADDRESS CHANNEL SIGNALS
+
+      READY,  // READ DATA CHANNEL SIGNALS
+
+
+      input  // each channel will be in a sepearte line for better visualization
+
+      ACLK, ARESETn,  //system
+
+      AWREADY,  // WRITE ADDRESS CHANNEL SIGNALS
+
+      WREADY,  // WRITE DATA CHANNEL SIGNALS
+
+      BREADY, BRESP,  // WRITE RESPONSE CHANNEL SIGNALS
+
+      AREADY,  // READ ADDRESS CHANNEL SIGNALS
+
+      RVALID, RLAST, RDATA, RESP  // READ DATA CHANNEL SIGNALS
+
+  );
+
 endinterface : axi4_if
 
 `endif

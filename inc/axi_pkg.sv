@@ -14,6 +14,8 @@ package axi_pkg;
   // *BURST : describes the burst type of the transaction: fixed, incrementing, or wrapping.
   typedef logic [`AXI_BURST_WIDTH-1:0] burst_t;
 
+  typedef logic [`AXI_LEN_WIDTH-1:0] len_t;
+
   typedef logic [`AXI_DATA_WIDTH-1:0] data_t;
 
   typedef logic [`AXI_STRB_WIDTH-1:0] strb_t;
