@@ -38,11 +38,11 @@ module axil_dpmem
       axi_slv.AW_READY <= 1;
       axi_slv.W_READY  <= 1;
 
-      if (axi_slv.AW_READY && axi_slv.AW_VALID) begin
+      if (axi_slv.AW_READY && axi_slv.AW_VALID && !aw_handshake) begin
         aw_handshake <= 1;
       end
 
-      if (axi_slv.W_READY && axi_slv.W_VALID) begin
+      if (axi_slv.W_READY && axi_slv.W_VALID && !aw_handshake && !w_handshake) begin
         for (int i = 0; i < `AXIL_STRB_WIDTH; i++) begin
           if (axi_slv.W_STRB[i]) begin
             MEM[axi_slv.AW_ADDR][i*8+:8] <= axi_slv.W_DATA[i*8+:8];
@@ -51,16 +51,19 @@ module axil_dpmem
         w_handshake <= 1;
       end
 
+      if (!aw_handshake && !w_handshake && !axi_slv.B_VALID) begin
+        axi_slv.B_VALID <= 1'b1;
+        axi_slv.B_RESP  <= 2'h0;  // OKAY
+      end
+
       if (axi_slv.B_VALID && axi_slv.B_READY) begin
         axi_slv.B_VALID <= 0;
+        axi_slv.B_RESP <= 2'h2;  // SLVERR
         aw_handshake <= 0;
         w_handshake <= 0;
       end
     end
   end
-
-  assign axi_slv.B_VALID = (aw_handshake && w_handshake) ? 1 : 0;
-  assign axi_slv.B_RESP  = (axi_slv.B_VALID) ? 2'h0 : 2'h2;
 
   always_ff @(posedge axi_slv.ACLK or negedge axi_slv.ARESETn) begin
 
@@ -76,8 +79,11 @@ module axil_dpmem
     end else begin
       axi_slv.AR_READY <= 1;
 
-      if (axi_slv.AR_VALID && axi_slv.AR_READY) begin
+      if (axi_slv.AR_VALID && axi_slv.AR_READY && !ar_handshake) begin
         ar_handshake <= 1;
+        axi_slv.R_VALID = 1;
+        axi_slv.R_DATA <= MEM[axi_slv.AR_ADDR];
+        axi_slv.R_RESP = 0;
       end
 
       if (axi_slv.R_VALID && axi_slv.R_READY) begin
@@ -89,15 +95,6 @@ module axil_dpmem
     end
 
   end
-
-  always_comb begin
-    if (ar_handshake) begin
-      axi_slv.R_VALID = 1;
-      axi_slv.R_DATA  = MEM[axi_slv.AR_ADDR];
-      axi_slv.R_RESP  = 0;
-    end
-  end
-
 
 endmodule : axil_dpmem
 
