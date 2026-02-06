@@ -1,1 +1,8 @@
 vivado_prj
+
+tb/xsim.dir
+tb/*.log
+tb/*.jou
+tb/*.pb
+tb/*.wdb
+ 

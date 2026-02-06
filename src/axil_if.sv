@@ -1,87 +1,82 @@
-`ifndef AXI_IF__SV
-`define AXI_IF__SV 
+`ifndef AXIL_IF__SV
+`define AXIL_IF__SV 
 
-interface axi_if
-  import axi_pkg::*;
+interface axil_if
+  import axil_pkg::*;
 (
-    bit ACLK,    // Global Clock Signal
-    bit ARESETn  // Global Reset Signal
+    input bit ACLK,    // Global Clock Signal
+    input bit ARESETn  // Global Reset Signal
 );
 
   ////////////////////////////////////////////
   // Write Channel Signals
   ////////////////////////////////////////////
 
+  ////////////////////////////////////////////
   // WRITE ADDRESS (AW) CHANNEL SIGNALS
+  ////////////////////////////////////////////
+  // Handshake signals
   bit AW_VALID;
   bit AW_READY;
+  // AXI-Lite signals
   addr_t AW_ADDR;
-  size_t AW_SIZE;
-  burst_t AW_BURST;
-  logic [7:0] AW_LEN;  // up to 256 transfers in the one transaction
-  // logic [3:0] AWCACHE;
-  // logic [2:0] AWPROT;
-  // logic [$:0] AWID;
-  // logic AWLOCK;
-  // logic [3:0] AWQOS;
-  // logic [3:0] AWREGION;
-  // logic [$:0] AWUSER;
+  logic [2:0] AW_PROT;
 
+  ////////////////////////////////////////////
   // WRITE DATA (W) CHANNEL SIGNALS
+  ////////////////////////////////////////////
+  // Handshake signals
   bit W_VALID;
   bit W_READY;
+  // AXI-Lite signals
   data_t W_DATA;
   strb_t W_STRB;
-  bit W_LAST;
-  // logic [$:0] WUSER;
 
+  ////////////////////////////////////////////
   // WRITE RESPONSE (B) CHANNEL SIGNALS
+  ////////////////////////////////////////////
+  // Handshake signals
   bit B_VALID;
   bit B_READY;
+  // AXI-Lite signals
   bit [1:0] B_RESP;
-  // logic [$:0] BID;
-  // logic [$:0] BUSER;
 
   ////////////////////////////////////////////
   // Read Channel Signals
   ////////////////////////////////////////////
 
+  ////////////////////////////////////////////
   // READ ADDRESS CHANNEL SIGNALS
+  ////////////////////////////////////////////
+  // Handshake signals
   bit AR_VALID;
   bit AR_READY;
+  // AXI-Lite signals
   addr_t AR_ADDR;
-  size_t AR_SIZE;
-  burst_t AR_BURST;
-  logic [7:0] AR_LEN;  // up to 256 transfers in the one transaction
-  // logic [3:0] ARCACHE;
-  // logic [2:0] ARPROT;
-  // logic [$:0] ARID;
-  // logic AWLOCK;
-  // logic [3:0] ARQOS;
-  // logic [3:0] ARREGION;
-  // logic [$:0] ARUSER;
+  logic [2:0] AR_PROT;
 
+  ////////////////////////////////////////////
   // READ DATA CHANNEL SIGNALS
+  ////////////////////////////////////////////
+  // Handshake signals
   bit R_VALID;
   bit R_READY;
-  bit R_LAST;
+  // AXI-Lite signals
   data_t R_DATA;
   strb_t R_RESP;
-  // logic [$:0] RID;
-  // logic [$:0] RUSER;
 
   modport slv_mp(
       input  // each channel will be in a sepearte line for better visualization
 
       ACLK, ARESETn,  // system
 
-      AW_VALID, AW_ADDR, AW_SIZE, AW_BURST, AW_LEN,  // WRITE ADDRESS CHANNEL SIGNALS
+      AW_VALID, AW_ADDR, AW_PROT,  // WRITE ADDRESS CHANNEL SIGNALS
 
-      W_VALID, W_DATA, W_STRB, W_LAST,  // WRITE DATA CHANNEL SIGNALS
+      W_VALID, W_DATA, W_STRB,  // WRITE DATA CHANNEL SIGNALS
 
       B_READY,  // WRITE RESPONSE CHANNEL SIGNALS
 
-      AR_VALID, AR_ADDR, AR_SIZE, AR_BURST, A_RLEN,  // READ ADDRESS CHANNEL SIGNALS
+      AR_VALID, AR_ADDR, AR_PROT,  // READ ADDRESS CHANNEL SIGNALS
 
       R_READY,  // READ DATA CHANNEL SIGNALS
 
@@ -96,10 +91,10 @@ interface axi_if
 
       AR_READY,  // READ ADDRESS CHANNEL SIGNALS
 
-      R_VALID, R_DATA, R_RESP, R_LAST  // READ DATA CHANNEL SIGNALS
+      R_VALID, R_DATA, R_RESP  // READ DATA CHANNEL SIGNALS
 
   );
 
-endinterface : axi4_if
+endinterface : axil_if
 
 `endif
